@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<body>
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="navbar-container">
+        <!-- Logo -->
+        <a class="navbar-brand" href="/"><i class="fa fa-square-o"></i>&nbsp;2TECH</a>
+
+        <ul class="navbar-nav" style="gap: 10px">
+            <li>
+                <a class="nav-link" href="/">Laptop</a>
+            </li>
+            <li>
+                <a class="nav-link" th:href="@{/apple-products}">MacBook</a>
+            </li>
+            <li>
+                <a class="nav-link" th:href="@{/posts}">Tin tức</a>
+            </li>
+        </ul>
+
+        <!-- Navbar nội dung -->
+        <div id="navbarNav">
+            <ul class="navbar-nav" style="gap: 12px;">
+                <!-- Auth Section -->
+                <li th:if="${userLogged == null}" class="nav-item">
+                    <a class="nav-link" href="/register">Đăng ký</a>
+                </li>
+                <li th:if="${userLogged == null}" class="nav-item">
+                    <a class="nav-link" href="/login">Đăng nhập</a>
+                </li>
+                <li th:if="${userLogged != null}" class="nav-item dropdown">
+                    <!-- Notification Bell -->
+                    <a class="nav-link dropdown-toggle dropdown-notify" href="#" role="button" aria-expanded="false"
+                       id="notificationDropdown">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge bg-danger" th:text="${unreadNotifications}"
+                              th:if="${unreadNotifications > 0}"></span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu--notify">
+                        <li th:each="notification : ${notifications}">
+                            <a class="dropdown-item" th:href="@{'/notifications/' + ${notification.id}}"
+                               th:text="${notification.content}"></a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item text-center" href="/notifications">Xem tất cả</a>
+                        </li>
+                    </ul>
+                </li>
+                <li th:if="${userLogged != null}" class="nav-item">
+                    <a class="nav-link" href="/cart"><i class="fas fa-shopping-cart"></i></a>
+                </li>
+                <li th:if="${userLogged != null}" class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown"
+                       role="button" aria-expanded="false">
+                        <img th:src="${userAvatar != null ? userAvatar : '/images/uploads/avatars/default-avatar.jpg'}"
+                             alt="Avatar" class="rounded-circle me-2"
+                             style="width: 32px; height: 32px; object-fit: cover;">
+
+                        <span th:text="${userLogged}"></span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="/profile">Tài khoản</a></li>
+                        <li><a class="dropdown-item" href="/profile/changePassword">Đổi mật khẩu</a></li>
+                        <li><a class="dropdown-item" href="/orders">Lịch sử mua hàng</a></li>
+                        <li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+</body>
+</html>

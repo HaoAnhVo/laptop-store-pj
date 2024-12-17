@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Danh sách đơn hàng</title>
+    <!-- BOOTSTRAP STYLES-->
+    <link href="/css/bootstrap.min.css" rel="stylesheet"/>
+    <!-- FONTAWESOME STYLES-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+    <!-- CUSTOM STYLES-->
+    <link href="/css/admin/custom.css" rel="stylesheet"/>
+    <!-- GOOGLE FONTS-->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+</head>
+<body>
+<div id="wrapper">
+    <div th:insert="admin/sample/navbar :: navbar"></div>
+    <!-- /. NAV TOP  -->
+    <div th:insert="admin/sample/sidebar :: sidebar"></div>
+    <div id="page-wrapper">
+        <div id="page-inner">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>Quản lý Đơn hàng</h2>
+                </div>
+            </div>
+
+            <hr>
+            <form th:action="@{/admin/orders}" method="get">
+                <input type="text" name="username" placeholder="Tìm kiếm đơn hàng" th:value="${username}"/>
+                <button type="submit">Tìm kiếm</button>
+            </form>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <div class="tabs">
+                            <ul>
+                                <li><a th:href="@{/admin/orders(status='PENDING')}">Đang chờ xử lý</a></li>
+                                <li><a th:href="@{/admin/orders(status='PROCESSING')}">Đang xử lý</a></li>
+                                <li><a th:href="@{/admin/orders(status='SHIPPED')}">Đang giao hàng</a></li>
+                                <li><a th:href="@{/admin/orders(status='COMPLETED')}">Hoàn thành</a></li>
+                                <li><a th:href="@{/admin/orders(status='CANCELLED')}">Đã hủy</a></li>
+                            </ul>
+                        </div>
+                        <table border="1">
+                            <thead>
+                            <tr>
+                                <th>Tài khoản</th>
+                                <th>Khách Hàng</th>
+                                <th>Trạng Thái</th>
+                                <th>Tổng Tiền</th>
+                                <th>Hành động</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="order : ${orders}">
+                                <td th:text="${order.user.username}"></td>
+                                <td th:text="${order.user.fullname}"></td>
+                                <td>
+                                    <span th:switch="${order.status.name()}">
+                                        <span th:case="'PENDING'">Chờ xử lý</span>
+                                        <span th:case="'PAID'">Chờ xử lý</span>
+                                        <span th:case="'PROCESSING'">Đang xử lý</span>
+                                        <span th:case="'SHIPPED'">Đang giao hàng</span>
+                                        <span th:case="'COMPLETED'">Hoàn thành</span>
+                                        <span th:case="'CANCELLED'">Đã hủy</span>
+                                    </span>
+                                </td>
+                                <td th:text="${order.formattedTotalAmount}"></td>
+                                <td>
+                                    <a style="color: #fff; background: #007bff"
+                                       th:href="@{/admin/orders/{id}(id=${order.id})}">Chi Tiết</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pagination">
+                        <ul>
+                            <!-- Hiển thị danh sách số trang -->
+                            <li th:each="page : ${pageNumbers}"
+                                th:class="${page - 1 == ordersPage.number} ? 'active' : ''">
+                                <a th:href="@{/admin/orders(page=${page - 1}, username=${username})}">[[${page}]]</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

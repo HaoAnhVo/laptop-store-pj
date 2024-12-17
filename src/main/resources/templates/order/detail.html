@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Chi tiết đơn hàng</title>
+    <!-- BOOTSTRAP STYLES-->
+    <link href="/css/bootstrap.min.css" rel="stylesheet"/>
+    <!-- CUSTOM STYLES-->
+    <link href="/css/admin/custom.css" rel="stylesheet"/>
+    <!-- GOOGLE FONTS-->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+</head>
+<body>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a class="breadcrumb-link" th:href="@{/}">Laptop</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a class="breadcrumb-link" th:href="@{/orders}">Đơn hàng</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+            <span>Chi tiết đơn hàng</span>
+        </li>
+    </ol>
+</nav>
+<div class="container my-5" style="margin-top: 30px">
+    <h1 class="text-center mb-4">Chi Tiết Đơn Hàng</h1>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <table class=" table table-bordered">
+                <tr>
+                    <th>Mã đơn hàng</th>
+                    <td th:text="${order.id}"></td>
+                </tr>
+                <tr>
+                    <th>Ngày đặt hàng</th>
+                    <td th:text="${formattedOrderDate}"></td>
+                </tr>
+                <tr>
+                    <th>Tổng giá tiền</th>
+                    <td th:text="${order.formattedTotalAmount}"></td>
+                </tr>
+                <tr>
+                    <th>Phương Thức Thanh Toán</th>
+                    <td>
+                    <span th:switch="${order.paymentMethod.name()}">
+                        <span th:case="'CASH_ON_DELIVERY'">Thanh toán khi nhận hàng</span>
+                        <span th:case="'BANK_TRANSFER'">Đã thanh toán qua ngân hàng</span>
+                    </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Trạng thái đơn hàng</th>
+                    <td>
+                        <span th:switch="${order.status.name()}">
+                            <span th:case="'PENDING'">Chờ xử lý</span>
+                            <span th:case="'PAID'">Chờ xử lý</span>
+                            <span th:case="'PROCESSING'">Đang xử lý</span>
+                            <span th:case="'SHIPPED'">Đã giao hàng cho bên vận chuyển</span>
+                            <span th:case="'COMPLETED'">Hoàn thành</span>
+                            <span th:case="'CANCELLED'">Đã hủy</span>
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <table class="table table-striped table-bordered">
+                <thead class="thead-dark">
+                <tr>
+                    <th>Tên Sản Phẩm</th>
+                    <th>Số Lượng</th>
+                    <th>Đơn Giá</th>
+                    <th>Tổng Tiền</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${orderItems}">
+                    <td th:text="${item.product.productName}"></td>
+                    <td th:text="${item.quantity}"></td>
+                    <td th:text="${item.formattedPrice}"></td>
+                    <td th:text="${item.formattedTotal}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="text-center" style="margin-top: 20px">
+        <a th:href="@{/orders}">Quay lại danh sách đơn hàng</a>
+    </div>
+</div>
+</body>
+</html>

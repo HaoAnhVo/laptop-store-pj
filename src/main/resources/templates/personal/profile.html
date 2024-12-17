@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang cá nhân</title>
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+
+    <link rel="stylesheet" type="text/css" href="/css/login/util.css">
+    <link rel="stylesheet" type="text/css" href="/css/login/main.css">
+    <link href="/css/toast.css" rel="stylesheet"/>
+    <!--===============================================================================================-->
+
+</head>
+<body>
+<div id="alert-message"
+     th:if="${success}"
+     class="alert alert-success">
+    <span th:text="${success}"></span>
+</div>
+<div class="limiter">
+    <div class="container-login100" style="background-image: url('/images/login/bg-01.jpg');">
+        <div class="wrap-login100 p-l-110 p-r-110 p-t-62 p-b-33">
+            <form th:object="${userProfile}" class="login100-form validate-form flex-sb flex-w"
+                  th:action="@{/profile/update}"
+                  enctype="multipart/form-data"
+                  method="post">
+                <span class="login100-form-title p-b-53">
+						Thông tin cá nhân
+					</span>
+                <div class="avatar-section">
+                    <label for="avatarUpload">
+                        <img id="avatarPreview"
+                             th:src="${userProfile.avatarPath}"
+                             class="avatar-image">
+                        <input type="file" id="avatarUpload" name="avatar" class="avatar-input" hidden>
+                    </label>
+                </div>
+                <div class="p-t-18 p-b-9">
+						<span class="txt1">
+							Họ tên
+						</span>
+                </div>
+                <div class="wrap-input100 validate-input" data-validate="Fullname is required">
+                    <input class="input100" type="text" name="fullname" th:field="*{fullname}" required>
+                    <span class="focus-input100"></span>
+                </div>
+
+                <div class="p-t-18 p-b-9">
+						<span class="txt1">
+							Email
+						</span>
+                </div>
+                <div class="wrap-input100 validate-input" data-validate="Email is required">
+                    <input class="input100" type="email" name="email" th:field="*{email}" required>
+                    <span class="focus-input100"></span>
+                </div>
+                <div th:if="${#fields.hasErrors('email')}" class="error">
+                    <span th:errors="*{email}"></span>
+                </div>
+
+                <div class="p-t-18 p-b-9">
+						<span class="txt1">
+							Số điện thoại
+						</span>
+                </div>
+                <div class="wrap-input100 validate-input" data-validate="Phone is required">
+                    <input class="input100" type="text" name="phone" th:field="*{phone}" required>
+                    <span class="focus-input100"></span>
+                </div>
+                <div th:if="${#fields.hasErrors('phone')}" class="error">
+                    <span th:errors="*{phone}"></span>
+                </div>
+
+                <div class="p-t-18 p-b-9">
+						<span class="txt1">
+							Địa chỉ
+						</span>
+                </div>
+                <div class="wrap-input100 validate-input" data-validate="Address is required">
+                    <input class="input100" type="text" name="address" th:field="*{address}" required>
+                    <span class="focus-input100"></span>
+                </div>
+                <div class="container-login100-form-btn m-t-24">
+                    <button type="submit" class="login100-form-btn">
+                        Cập nhật
+                    </button>
+                </div>
+            </form>
+            <div class="w-full text-center p-t-55">
+                <a th:href="@{/}" class="txt2 bo1">
+                    Quay về Laptop
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="loadingOverlay"
+     style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 9999; color: white; font-size: 20px; text-align: center; padding-top: 20%;">
+    <div>Loading...</div>
+</div>
+<script type="application/javascript" src="/js/alert.js"></script>
+<script>
+    document.getElementById('avatarUpload').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const avatarPreview = document.getElementById('avatarPreview');
+
+        if (file) {
+            if (file.size > 5242880) {
+                alert('File quá lớn! Kích thước tối đa là 5MB.');
+                event.target.value = '';
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('avatar', file);
+
+            loadingOverlay.style.display = 'block';
+
+            fetch('/profile/update-avatar', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const newAvatarUrl = data.newAvatarPath + '?v=' + new Date().getTime();
+                        avatarPreview.src = newAvatarUrl;
+                        loadingOverlay.style.display = 'none';
+                    } else {
+                        alert(data.error || 'Đã xảy ra lỗi khi upload file!');
+                        loadingOverlay.style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Đã xảy ra lỗi khi upload file!');
+                    loadingOverlay.style.display = 'none';
+                });
+        }
+    });
+</script>
+
+</body>
+</html>

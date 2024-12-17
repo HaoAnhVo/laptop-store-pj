@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Thông tin sản phẩm</title>
+    <!-- BOOTSTRAP STYLES-->
+    <link href="/css/bootstrap.min.css" rel="stylesheet"/>
+    <!-- FONTAWESOME STYLES-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+    <!-- CUSTOM STYLES-->
+    <link href="/css/admin/detail-product.css" rel="stylesheet"/>
+
+    <!-- GOOGLE FONTS-->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+</head>
+<body>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a class="breadcrumb-link" th:href="@{/}">Laptop</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a class="breadcrumb-link" th:href="@{/products?productTypeId={id}(id=${productType.id})}" th:text="${productType.typeName}"></a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+            <span th:text="${product.productName}"></span>
+        </li>
+    </ol>
+</nav>
+
+<div class="container">
+    <h2><span th:text="${product.productName}"></span></h2>
+    <img th:src="@{${product.imageUrl}}" alt="Hình ảnh sản phẩm" width="200" height="200">
+    <p><strong>Thương hiệu:</strong> <span th:text="${product.productType.typeName}"></span></p>
+    <p><strong>Giá:</strong> <span th:text="${product.formattedPrice}"></span></p>
+
+    <h3>Thông số sản phẩm</h3>
+    <p><span th:text="${product.description}"></span></p>
+    <form th:action="@{/cart/add}" method="post" th:if="${product.stock > 0}">
+        <input type="hidden" name="productId" th:value="${product.id}">
+        <button type="submit" class="btn btn-primary">Thêm vào giỏ hàng
+        </button>
+    </form>
+
+    <div class="reviews">
+        <h3>Đánh giá & Nhận xét <span th:text="${product.productName}"></span></h3>
+        <div class="reviews-info">
+            <div class="reviews-summary">
+                <p class="reviews-stars">
+                    <strong th:text="${averageRating}"></strong><strong>/5★</strong>
+                </p>
+                <p>
+                    (<strong th:text="${reviews.size()}"></strong>) đánh giá & nhận xét
+                </p>
+            </div>
+            <div class="reviews-rating">
+                <p>5 <span class="star">★</span> : <span th:text="${count5Stars}"></span> đánh giá</p>
+                <p>4 <span class="star">★</span> : <span th:text="${count4Stars}"></span> đánh giá</p>
+                <p>3 <span class="star">★</span> : <span th:text="${count3Stars}"></span> đánh giá</p>
+                <p>2 <span class="star">★</span> : <span th:text="${count2Stars}"></span> đánh giá</p>
+                <p>1 <span class="star">★</span> : <span th:text="${count1Star}"></span> đánh giá</p>
+            </div>
+        </div>
+        <div th:each="review : ${reviews}">
+            <div class="reviews-item">
+                <div class="reviews-author">
+                    <p><strong th:text="${review.user.username}"></strong></p>
+                    <p th:text="${#dates.format(review.createdAt, 'dd/MM/yyyy')}"></p>
+                </div>
+
+                <div>
+                    <span th:each="i : ${#numbers.sequence(1, review.rating)}" class="star">★</span>
+                    <span th:each="i : ${#numbers.sequence(review.rating + 1, 5)}" class="star">☆</span>
+                </div>
+                <p th:text="${review.content}"></p>
+                <div class="comments" th:each="review : ${reviews}">
+                    <div class="comments-item" th:each="comment : ${review.comments}">
+                        <div class="comments-author">
+                            <p><strong style="color: #E30019;" th:text="${comment.author}"></strong></p>
+                            <p style="color: #97999D" th:text="${#dates.format(comment.createdAt, 'dd/MM/yyyy')}"></p>
+                        </div>
+                        <p><span th:text="${comment.content}"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="reviews-form-container">
+        <h4 class="reviews-form-title">Để lại đánh giá của bạn</h4>
+        <form action="/review/add" method="post" class="reviews-form">
+            <input type="hidden" name="productId" th:value="${product.id}"/>
+            <textarea class="reviews-textarea" name="content" placeholder="Góp ý của bạn về sản phẩm"
+                      required></textarea>
+            <div class="rating-container">
+                <label for="rating" class="rating-label">Đánh giá <span class="star">(★)</span></label>
+                <input type="number" id="rating" name="rating" class="rating-input" min="1" max="5" required/>
+            </div>
+            <button type="submit" class="submit-btn">Gửi đánh giá</button>
+        </form>
+    </div>
+</div>
+<div class="text-center">
+    <a th:href="@{/}">Quay lại Laptop</a>
+</div>
+</body>
+</html>

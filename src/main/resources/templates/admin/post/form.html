@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <title th:text="${post.id == null ? 'Tạo bài viết mới' : 'Chỉnh sửa bài viết'}"></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <script src="https://cdn.tiny.cloud/1/vee2bmgmx9xifzz7zneut40bbh5l5dowon9at2v1ojcv7snw/tinymce/6/tinymce.min.js"
+            referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: '#content-editor',
+            height: 500,
+            plugins: 'link image code table lists',
+            toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | code',
+            images_upload_url: '/admin/posts/upload-image',
+            automatic_uploads: true,
+            file_picker_types: 'image',
+            images_reuse_filename: true,
+            setup: function (editor) {
+                editor.on('Paste PostProcess', function (e) {
+                    e.content = e.content.replace(/src="\/images\/uploads\/.*?"/g, function (match) {
+                        return match;
+                    });
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+<div class="container mt-4">
+    <h1 class="mb-4" th:text="${post.id == null ? 'Tạo bài viết mới' : 'Chỉnh sửa bài viết'}"></h1>
+
+    <form th:action="${post.id == null ? '/admin/posts/create' : '/admin/posts/update'}" th:object="${post}"
+          method="post" enctype="multipart/form-data">
+        <input type="hidden" th:field="*{id}">
+
+        <div class="mb-3">
+            <label for="thumbnail" class="form-label">Link thumbnail</label>
+            <input id="thumbnail" type="text" class="form-control" th:field="*{thumbnail}"/>
+        </div>
+        <div class="mb-3">
+            <label for="title" class="form-label">Tiêu đề:</label>
+            <input type="text" id="title" class="form-control" th:field="*{title}" placeholder="Nhập tiêu đề">
+        </div>
+        <div class="mb-3">
+            <label for="content-editor" class="form-label">Nội dung:</label>
+            <textarea id="content-editor" th:field="*{content}" placeholder="Nhập nội dung"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Lưu bài viết</button>
+    </form>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Thêm/Chỉnh sửa nhãn hàng</title>
+    <link href="/css/admin/form.css" rel="stylesheet"/>
+</head>
+<body>
+<h2 class="form-title" th:text="${productType.id == null ? 'Thêm mới nhãn hàng' : 'Chỉnh sửa nhãn hàng'}"></h2>
+<form class="form-container" th:action="@{/admin/productTypes/save}" th:object="${productType}" method="post">
+    <input class="hidden-field" type="hidden" th:field="*{id}"/>
+    <div class="form-group">
+        <label for="typeName">Tên nhãn hàng:</label>
+        <input id="typeName" type="text" th:field="*{typeName}" required/>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit">Lưu</button>
+    </div>
+</form>
+<div class="center-container">
+    <a class="back-link" th:href="@{/admin/productTypes}">
+        <span class="arrow">←</span> Quay lại
+    </a>
+</div>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${post.title}">Chi tiết bài viết</title>
+    <!-- Liên kết CSS của Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            font-size: 16px;
+            background: #ffffff;
+        }
+
+        .container {
+            height: 100%;
+            max-width: 1200px;
+            margin: auto;
+            padding: 2rem;
+        }
+
+        .card {
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            border: none;
+            border-radius: 10px;
+        }
+
+        .card-header {
+            background-color: #1f0919;
+            color: #fff;
+            text-align: center;
+            padding: 1.5rem 0;
+            font-size: 1.8rem;
+            font-weight: bold;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .content {
+            font-size: 18px;
+            line-height: 1.8;
+            padding: 1rem;
+            color: #333;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+        }
+
+        .meta-date {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .btn-back {
+            background-color: #6c757d;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background-color: #495057;
+        }
+
+        .card-footer {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title" th:text="${post.title}">Bài viết</h1>
+            <img id="thumbnailPreview" th:if="${post.thumbnail != null}" th:src="@{${post.thumbnail}}" class="mt-5"
+                 style="max-height: 200px;" alt="Thumbnail">
+        </div>
+        <div class="card-body">
+            <p class="text-muted text-center mb-3">
+                Ngày tạo: <span th:text="${#dates.format(post.createdAt, 'dd/MM/yyyy HH:mm')}"></span><br>
+                Ngày chỉnh sửa: <span th:text="${#dates.format(post.effectiveUpdatedAt, 'dd/MM/yyyy HH:mm')}"></span>
+            </p>
+            <!-- Hiển thị nội dung bài viết -->
+            <div class="content">
+                <p th:utext="${post.content}"></p>
+            </div>
+        </div>
+        <div class="card-footer text-center">
+            <a th:href="@{${backUrl}}" class="btn btn-secondary btn-back">Quay lại danh sách</a>
+        </div>
+    </div>
+</div>
+
+<!-- Liên kết JavaScript của Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

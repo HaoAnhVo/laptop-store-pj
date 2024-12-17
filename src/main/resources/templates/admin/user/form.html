@@ -1,0 +1,88 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="/css/admin/form.css" rel="stylesheet"/>
+</head>
+<body>
+<!-- user-form.html -->
+<h2 class="form-title" th:text="${user.id == null ? 'Thêm người dùng mới' : 'Chỉnh sửa người dùng'}"></h2>
+<form class="form-container" th:action="${user.id == null ? '/admin/users/create' : '/admin/users/update'}"
+      th:object="${user}" method="post">
+    <input class="hidden-field" type="hidden" th:field="*{id}"/>
+
+    <div class="form-group">
+        <label for="username">Tài khoản:</label>
+        <input id="username" type="text" th:field="*{username}" th:readonly="${user.id != null}" required/>
+        <div th:if="${#fields.hasErrors('username')}" class="error">
+            <span th:errors="*{username}"></span>
+        </div>
+    </div>
+
+    <div class="form-group" th:if="${user.id == null}">
+        <label for="password">Mật khẩu:</label>
+        <input id="password" type="password" th:field="*{password}" required/>
+        <div th:if="${#fields.hasErrors('password')}" class="error">
+            <span th:errors="*{password}"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="fullname">Họ và tên:</label>
+        <input id="fullname" type="text" th:field="*{fullname}" required/>
+        <div th:if="${#fields.hasErrors('fullname')}" class="error">
+            <span th:errors="*{fullname}"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input id="email" type="text" th:field="*{email}" required/>
+        <div th:if="${#fields.hasErrors('email')}" class="error">
+            <span th:errors="*{email}"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="phone">Số điện thoại:</label>
+        <input id="phone" type="text" th:field="*{phone}" required/>
+        <div th:if="${#fields.hasErrors('phone')}" class="error">
+            <span th:errors="*{phone}"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="address">Địa chỉ:</label>
+        <input id="address" type="text" th:field="*{address}" required/>
+        <div th:if="${#fields.hasErrors('address')}" class="error">
+            <span th:errors="*{address}"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="role">Vai trò:</label>
+        <select id="role" th:field="*{role}" required>
+            <option value="">-- Chọn vai trò --</option>
+            <option th:value="'ADMIN'" th:text="Admin" th:selected="${user.role == T(com.codegym.salesmanagement.model.User.Role).ADMIN}"></option>
+            <option th:value="'USER'" th:text="User" th:selected="${user.role == T(com.codegym.salesmanagement.model.User.Role).USER}"></option>
+        </select>
+        <div th:if="${#fields.hasErrors('role')}" class="error">
+            <span th:errors="*{role}"></span>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit">Lưu</button>
+    </div>
+</form>
+<div class="center-container">
+    <a class="back-link" th:href="@{/admin/users}">
+        <span class="arrow">←</span> Quay lại
+    </a>
+</div>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <title>Xác nhận đơn hàng</title>
+    <!-- BOOTSTRAP STYLES-->
+    <link href="/css/bootstrap.min.css" rel="stylesheet"/>
+    <!-- FONTAWESOME STYLES-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+    <!-- CUSTOM STYLES-->
+    <link href="/css/admin/detail-product.css" rel="stylesheet"/>
+    <!-- GOOGLE FONTS-->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+</head>
+<body>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a class="breadcrumb-link" th:href="@{/}">Laptop</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a class="breadcrumb-link" th:href="@{/cart}">Giỏ hàng</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+            <span>Hóa đơn</span>
+        </li>
+    </ol>
+</nav>
+<div th:if="${error}" class="alert alert-danger">
+    <p th:text="${error}"></p>
+</div>
+<div th:if="${success}" class="alert alert-success">
+    <span th:text="${success}"></span>
+</div>
+<div class="container">
+    <h2>Xác nhận đơn hàng</h2>
+    <div class="user-info">
+        <h3>Thông tin người dùng</h3>
+        <p><strong>Họ tên:</strong> <span th:text="${user.fullname}"></span></p>
+        <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>
+        <p><strong>Số điện thoại:</strong> <span th:text="${user.phone}"></span></p>
+        <p><strong>Địa chỉ:</strong> <span th:text="${user.address}"></span></p>
+    </div>
+
+    <h3>Chi tiết giỏ hàng</h3>
+    <div class="cart-items">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Tên sản phẩm</th>
+                <th>Số lượng</th>
+                <th>Giá</th>
+                <th>Tổng</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${cart.cartItems}">
+                <td th:text="${item.product.productName}"></td>
+                <td th:text="${item.quantity}"></td>
+                <td th:text="${item.formattedPrice}"></td>
+                <td th:text="${item.formattedTotal}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="cart-summary">
+        <p><strong>Tổng giá trị giỏ hàng:</strong> <span th:text="${totalAmount}"></span></p>
+    </div>
+
+    <form th:action="@{/checkout}" method="post" class="checkout-form">
+        <div class="form-group">
+            <label for="paymentMethod">Hình thức thanh toán:</label>
+            <select name="paymentMethod" id="paymentMethod" class="form-control" required>
+                <option value="" disabled selected>-- Chọn hình thức thanh toán --</option>
+                <option value="CASH_ON_DELIVERY">Thanh toán khi nhận hàng</option>
+                <option value="BANK_TRANSFER">Thanh toán qua thẻ</option>
+            </select>
+        </div>
+        <button style="background: #007bff; color: #fff" type="submit" class="btn checkout-btn">Xác nhận và đặt hàng</button>
+    </form>
+
+</div>
+</body>
+</html>

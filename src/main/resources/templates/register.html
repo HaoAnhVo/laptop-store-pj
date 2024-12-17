@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Đăng Ký</title>
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+
+    <link rel="stylesheet" type="text/css" href="/css/login/util.css">
+    <link rel="stylesheet" type="text/css" href="/css/login/main.css">
+    <!--===============================================================================================-->
+</head>
+<body>
+<div class="limiter">
+    <div class="container-login100" style="background-image: url('/images/login/bg-01.jpg');">
+        <div class="wrap-login100 p-l-110 p-r-110 p-t-62 p-b-33">
+            <form class="login100-form validate-form flex-sb flex-w" th:action="@{/register}" th:object="${user}" method="post">
+                <span class="login100-form-title p-b-53">
+						Đăng Ký
+					</span>
+                <div class="p-t-31 p-b-9">
+						<span class="txt1">
+							Tài khoản
+						</span>
+                </div>
+                <div class="wrap-input100 validate-input" data-validate="Username is required">
+                    <input class="input100" type="text" name="username" th:field="*{username}" required>
+                    <span class="focus-input100"></span>
+                    <div th:if="${#fields.hasErrors('username')}" class="error">
+                        <span th:errors="*{username}"></span>
+                    </div>
+                </div>
+
+                <div class="p-t-13 p-b-9">
+						<span class="txt1">
+							Mật khẩu
+						</span>
+                </div>
+                <div class="wrap-input100 validate-input" data-validate="Password is required">
+                    <input class="input100" type="password" name="password" th:field="*{password}" required>
+                    <span class="focus-input100"></span>
+                    <div th:if="${#fields.hasErrors('password')}" class="error">
+                        <span th:errors="*{password}"></span>
+                    </div>
+                </div>
+
+                <div class="p-t-13 p-b-9">
+						<span class="txt1">
+							Email
+						</span>
+                </div>
+                <div class="wrap-input100 validate-input" data-validate="Email is required">
+                    <input class="input100" type="email" name="email" th:field="*{email}" required>
+                    <span class="focus-input100"></span>
+                    <div th:if="${#fields.hasErrors('email')}" class="error">
+                        <span th:errors="*{email}"></span>
+                    </div>
+                </div>
+
+                <div class="p-t-13 p-b-9">
+						<span class="txt1">
+							Họ tên
+						</span>
+                </div>
+                <div class="wrap-input100 validate-input" data-validate="Fullname is required">
+                    <input class="input100" type="text" name="fullname" th:field="*{fullname}" required>
+                    <span class="focus-input100"></span>
+                    <div th:if="${#fields.hasErrors('fullname')}" class="error">
+                        <span th:errors="*{fullname}"></span>
+                    </div>
+                </div>
+
+                <div class="p-t-13 p-b-9">
+						<span class="txt1">
+							Số điện thoại
+						</span>
+                </div>
+                <div class="wrap-input100 validate-input" data-validate="Phone is required">
+                    <input class="input100" type="tel" name="phone" th:field="*{phone}" required>
+                    <span class="focus-input100"></span>
+                    <div th:if="${#fields.hasErrors('phone')}" class="error">
+                        <span th:errors="*{phone}"></span>
+                    </div>
+                </div>
+
+                <div class="p-t-13 p-b-9">
+						<span class="txt1">
+							Địa chỉ
+						</span>
+                </div>
+                <div class="wrap-input100 validate-input" data-validate="Address is required">
+                    <input class="input100" type="text" name="address" required>
+                    <span class="focus-input100"></span>
+                    <div th:if="${#fields.hasErrors('address')}" class="error">
+                        <span th:errors="*{address}"></span>
+                    </div>
+                </div>
+
+                <div class="container-login100-form-btn m-t-24">
+                    <button type="submit" class="login100-form-btn">
+                        Đăng ký
+                    </button>
+                </div>
+
+                <div class="w-full text-center p-t-55">
+						<span class="txt2">
+							Bạn đã có tài khoản?
+						</span>
+
+                    <a th:href="@{/login}" class="txt2 bo1">
+                        Đăng nhập
+                    </a>
+                </div>
+            </form>
+            <div class="w-full text-center p-t-55">
+                <a th:href="@{/}" class="txt2 bo1">
+                    Quay về Laptop
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

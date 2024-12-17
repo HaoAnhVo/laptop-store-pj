@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Thông tin sản phẩm</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+    <link href="/css/admin/detail-product.css" rel="stylesheet"/>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <script>
+        document.querySelectorAll('.edit-link').forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                const commentId = this.getAttribute('href').split('/').pop();
+                fetch(`/products/details/review/comments/edit/${commentId}`)
+                    .then(response => response.text())
+                    .then(data => {
+                        const commentContainer = document.querySelector(`#comment-${commentId}`);
+                        const formContainer = commentContainer.querySelector('.comment-actions');
+
+                        if (!commentContainer.querySelector('.edit-comment-form')) {
+                            const form = document.createElement('div');
+                            form.innerHTML = data;
+                            formContainer.appendChild(form);
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+        });
+
+        document.querySelectorAll('.delete-link').forEach(link => {
+            link.addEventListener('click', function (event) {
+                event.preventDefault();
+                if (!confirm('Bạn có chắc chắn muốn xóa bình luận này không?')) {
+                    return;
+                }
+
+                const commentId = this.getAttribute('href').split('/').pop();
+                const commentContainer = document.querySelector(`#comment-${commentId}`);
+
+                fetch(`/products/details/review/comments/delete/${commentId}`, {
+                    method: 'GET',
+                    headers: {'Content-Type': 'application/json'}
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            commentContainer.remove();
+                            window.location.href = 'localhost:8080/admin/products/detail/' + data.productId;
+                        } else {
+                            alert(data.message || 'Xóa bình luận thất bại!');
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+        });
+    </script>
+</head>
+<body>
+<div class="container">
+    <h2><span th:text="${product.productName}"></span></h2>
+    <img th:src="@{${product.imageUrl}}" alt="Hình ảnh sản phẩm" width="200" height="200">
+    <p><strong>Loại sản phẩm:</strong> <span th:text="${product.productType.typeName}"></span></p>
+    <p><strong>Giá:</strong> <span th:text="${product.formattedPrice}"></span></p>
+    <p><strong>Số lượng trong kho:</strong> <span th:text="${product.stock}"></span></p>
+
+    <h3>Thông số sản phẩm</h3>
+    <p><span th:text="${product.description}"></span></p>
+
+    <div class="reviews">
+        <h3>Đánh giá & Nhận xét <span th:text="${product.productName}"></span></h3>
+        <div th:if="${#lists.isEmpty(reviews)}">
+            <p>Chưa có đánh giá nào cho sản phẩm này.</p>
+        </div>
+
+        <div th:each="review : ${reviews}">
+            <div class="reviews-item">
+                <div class="reviews-author">
+                    <p><strong th:text="${review.user.username}"></strong></p>
+                    <p style="color: #97999D" th:text="${#dates.format(review.createdAt, 'dd/MM/yyyy')}"></p>
+                </div>
+
+                <div>
+                    <span th:each="i : ${#numbers.sequence(1, review.rating)}" class="star">★</span>
+                    <span th:each="i : ${#numbers.sequence(review.rating + 1, 5)}" class="star">☆</span>
+                </div>
+                <p th:text="${review.content}"></p>
+                <div class="comments">
+                    <div class="comments-item" id="comment-[[${comment.id}]]" th:each="comment : ${review.comments}">
+                        <div class="comments-author">
+                            <p><strong style="color: #E30019;" th:text="${comment.author}"></strong></p>
+                            <p style="color: #97999D" th:text="${#dates.format(comment.createdAt, 'dd/MM/yyyy')}"></p>
+                            <div class="comment-actions">
+                                <button class="menu-btn">⋮</button>
+                                <div class="menu-dropdown menu-dropdown--custom">
+                                    <a th:href="@{'/products/details/review/comments/edit/' + ${comment.id}}"
+                                       class="edit-link">Sửa</a>
+                                    <a th:href="@{'/products/details/review/comments/delete/' + ${comment.id}}"
+                                       class="delete-link">Xóa</a>
+                                </div>
+                            </div>
+                        </div>
+                        <p><span th:text="${comment.content}"></span></p>
+                    </div>
+
+                    <!-- Form thêm bình luận -->
+                    <form class="comments-form"
+                          th:action="@{'/products/details/review/' + ${review.id} + '/comments/add'}" method="post">
+                        <textarea class="comments-textarea" name="content" rows="2"
+                                  placeholder="Nhập bình luận..."></textarea>
+                        <button type="submit" class="submit-btn">Thêm bình luận</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="text-center">
+    <a th:href="@{/admin/products}">Quay lại danh sách sản phẩm</a>
+</div>
+</body>
+</html>

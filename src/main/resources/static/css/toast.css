@@ -1,0 +1,16 @@
+#alert-message {
+    position: fixed;
+    top: 70px;
+    right: 45px;
+    z-index: 1050;
+    width: auto;
+    display: none;
+    padding: 10px 20px;
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    justify-content: center;
+    align-items: center;
+}

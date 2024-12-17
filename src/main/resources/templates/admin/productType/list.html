@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Quản lý thương hiệu</title>
+    <!-- BOOTSTRAP STYLES-->
+    <link href="/css/bootstrap.min.css" rel="stylesheet"/>
+    <!-- FONTAWESOME STYLES-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+    <!-- CUSTOM STYLES-->
+    <link href="/css/admin/custom.css" rel="stylesheet"/>
+    <link href="/css/toast.css" rel="stylesheet"/>
+    <!-- GOOGLE FONTS-->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+</head>
+<body>
+<div id="wrapper">
+    <div th:insert="admin/sample/navbar :: navbar"></div>
+    <div th:insert="admin/sample/sidebar :: sidebar"></div>
+    <div id="page-wrapper">
+        <div id="page-inner">
+            <div id="alert-message"
+                 th:if="${message}"
+                 class="alert alert-success">
+                <p th:text="${message}"></p>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>Quản lý thương hiệu</h2>
+                </div>
+            </div>
+
+            <hr>
+            <form action="@{/admin/productTypes}" method="get">
+                <input type="text" name="keyword" placeholder="Tìm kiếm nhãn hàng" th:value="${productTypeName}" />
+                <button type="submit">Tìm kiếm</button>
+            </form>
+            <a href="/admin/productTypes/create">Thêm mới thương hiệu</a>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table" border="1">
+                            <thead>
+                            <tr>
+                                <th>Tên thương hiệu</th>
+                                <th>Hành động</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="type : ${productTypes}">
+                                <td th:text="${type.typeName}"></td>
+                                <td>
+                                    <a th:href="@{/admin/productTypes/edit/{id}(id=${type.id})}">Sửa</a>
+                                    <a th:href="@{/admin/productTypes/delete/{id}(id=${type.id})}" onclick="return confirm('Xóa loại sản phẩm này?');">Xóa</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="pagination">
+                <ul>
+                    <!-- Hiển thị danh sách số trang -->
+                    <li th:each="page : ${pageNumbers}"
+                        th:class="${page - 1 == productTypePage.number} ? 'active' : ''">
+                        <a th:href="@{/admin/productTypes(page=${page - 1}, productTypeName=${productTypeName})}">[[${page}]]</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:if="${message}">
+    <script th:src="@{/js/alert.js}"></script>
+</th:block>
+</body>
+</html>
